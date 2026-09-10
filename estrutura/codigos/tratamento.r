@@ -1,14 +1,6 @@
 # Importa a base de dados do ENEM usando ponto e vírgula como separador
 dataset <- read.csv("Dados_Enem_2021-2025.csv", header = TRUE, sep = ";")
 
-# Instala os pacotes usados nas análises e gráficos
-install.packages("dplyr")
-install.packages("ggplot2")
-
-# Carrega os pacotes para que suas funções possam ser utilizadas
-library(dplyr)
-library(ggplot2)
-
 # Verifica o número de linhas e colunas antes do tratamento
 dim(dataset)
 
