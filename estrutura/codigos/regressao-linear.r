@@ -97,3 +97,15 @@ itr <- sample(seq_len(n), size = round(0.7 * n))
 # Cria os conjuntos de treinamento e teste
 tr <- dataset[itr, ]
 te <- dataset[-itr, ]
+
+# Modelo 1: prevê MEDIA_MT usando somente a nota de Matemática
+m1 <- lm(MEDIA_MT ~ NU_NOTA_MT, data = tr)
+
+# Modelo 2: acrescenta a renda como variável explicativa
+m2 <- lm(MEDIA_MT ~ NU_NOTA_MT + RENDA, data = tr)
+
+# Função para calcular o erro quadrático médio (MSE)
+mse <- function(m,d) mean((d$MEDIA-predict(m,d))^2)
+
+# Calcula a raiz do MSE (RMSE) dos dois modelos no conjunto de teste
+sqrt(c(m1 = mse(m1,te), m2 = mse(m2,te)))
