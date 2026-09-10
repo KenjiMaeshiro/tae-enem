@@ -85,3 +85,15 @@ library(lmtest)
 # Aplica o teste de Breusch-Pagan para verificar heterocedasticidade
 bptest(m)
 
+# Avaliação e treinamento do modelo
+
+# Garante que a divisão da amostra possa ser reproduzida
+set.seed(1)
+
+# Separa aproximadamente 70% dos dados para treino e 30% para teste
+n <- nrow(dataset)
+itr <- sample(seq_len(n), size = round(0.7 * n))
+
+# Cria os conjuntos de treinamento e teste
+tr <- dataset[itr, ]
+te <- dataset[-itr, ]
