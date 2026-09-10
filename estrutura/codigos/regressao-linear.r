@@ -34,9 +34,6 @@ dataset$MEDIA_MT <- rowMeans(
   )]
 )
 
-
-
-
 # Ajusta as margens e mantém o gráfico com proporção quadrada
 par(mar=c(4,4,1,1), pty="s")
 # Gráfico de dispersão entre a média sem Matemática e a nota de Matemática
