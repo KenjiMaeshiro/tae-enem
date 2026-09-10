@@ -33,62 +33,18 @@ dataset[colunas_int] <- lapply(
 # Remove as linhas que possuem pelo menos um valor ausente
 dataset <- na.omit(dataset)
 
-# Representa numericamente cada faixa de renda do questionário Q007.
-# Os valores são definidos separadamente para cada ano do ENEM.
-medias_renda_21 <- c(
-  A = 0, B = 550, C = 1375, D = 1925, E = 2475, F = 3025, G = 3850, H = 4950,
-  I = 6050, J = 7150, K = 8250, L = 9350, M = 10450, N = 12100, O = 14850,
-  P = 19250, Q = 22000
-)
+# Transforma Q020 em uma variável lógica:
+# TRUE representa resposta "B" e FALSE representa as demais respostas.
+dataset$Q020 <- dataset$Q020 == "B"
 
-medias_renda_22 <- c(
-  A = 0, B = 606, C = 1515, D = 2121, E = 2727, F = 3333, G = 4242, H = 5454,
-  I = 6666, J = 7878, K = 9090, L = 10302, M = 11514, N = 13332, O = 16362,
-  P = 21210, Q = 24240
-)
+# Converte a resposta da Q021 em uma variável binária:
+# A = 0 (Não possui notebook) e as demais respostas = 1 (Possui notebook)
+dataset$NOTE <- ifelse(dataset$Q021 == "A", 0, 1)
 
-medias_renda_23 <- c(
-  A = 0, B = 660, C = 1650, D = 2310, E = 2970, F = 3630, G = 4620, H = 5940,
-  I = 7260, J = 8580, K = 9900, L = 11220, M = 12540, N = 14520, O = 17820,
-  P = 23100, Q = 26400
-)
+# Mantém somente as categorias de cor/raça de 1 a 5
+dataset_raca <- subset(dataset, TP_COR_RACA %in% 1:5)
 
-medias_renda_24 <- c(
-  A = 0, B = 706, C = 1765, D = 2472, E = 3177, F = 3883, G = 4942, H = 6354,
-  I = 7766, J = 9178, K = 10590, L = 12002, M = 13414, N = 15532, O = 19062,
-  P = 24710, Q = 28240
-)
+# Transforma a variável em binária:
+# categoria 1 = FALSE; categorias 2 a 5 = TRUE
+dataset_raca$RACA <- ifelse(dataset_raca$TP_COR_RACA == 1, FALSE, TRUE)
 
-medias_renda_25 <- c(
-  A = 0, B = 759, C = 1898, D = 2657, E = 3416, F = 4175, G = 5313, H = 6831,
-  I = 8349, J = 9867, K = 11385, L = 12903, M = 14421, N = 16698, O = 20493,
-  P = 26565, Q = 30360
-)
-
-# Cria a coluna que armazenará a renda numérica de cada participante
-dataset$RENDA <- NA_real_
-
-# Substitui as categorias Q007 pelos valores correspondentes de 2021
-dataset$RENDA[dataset$NU_ANO == 2021] <- as.numeric(
-  medias_renda_21[as.character(dataset$Q007[dataset$NU_ANO == 2021])]
-)
-
-# Substitui as categorias Q007 pelos valores correspondentes de 2022
-dataset$RENDA[dataset$NU_ANO == 2022] <- as.numeric(
-  medias_renda_22[as.character(dataset$Q007[dataset$NU_ANO == 2022])]
-)
-
-# Substitui as categorias Q007 pelos valores correspondentes de 2023
-dataset$RENDA[dataset$NU_ANO == 2023] <- as.numeric(
-  medias_renda_23[as.character(dataset$Q007[dataset$NU_ANO == 2023])]
-)
-
-# Substitui as categorias Q007 pelos valores correspondentes de 2024
-dataset$RENDA[dataset$NU_ANO == 2024] <- as.numeric(
-  medias_renda_24[as.character(dataset$Q007[dataset$NU_ANO == 2024])]
-)
-
-# Substitui as categorias Q007 pelos valores correspondentes de 2025
-dataset$RENDA[dataset$NU_ANO == 2025] <- as.numeric(
-  medias_renda_25[as.character(dataset$Q007[dataset$NU_ANO == 2025])]
-)
