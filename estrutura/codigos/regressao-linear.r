@@ -77,3 +77,11 @@ plot(fitted(m), resid(m), pch=19, col="blue",
 
 # Linha de referência para verificar a distribuição dos resíduos em torno de zero
 abline(h=0, col="orange", lwd=3, lty=2)''
+
+# Teste de Breusch - Pagan
+# Instala e carrega o pacote usado para testes de regressão
+install.packages("lmtest")
+library(lmtest)
+# Aplica o teste de Breusch-Pagan para verificar heterocedasticidade
+bptest(m)
+
