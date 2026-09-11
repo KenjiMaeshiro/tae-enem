@@ -1,4 +1,4 @@
-dataset <- read.csv("Dados_Enem_2021-2025.csv", header = TRUE, sep = ";")
+dataset <- read.csv("dados-enem-2021-2025.csv", header = TRUE, sep = ";")
 
 # Seleciona as cinco notas do ENEM que serão utilizadas nos cálculos
 colunas_int <- c("NU_NOTA_CN", "NU_NOTA_CH", "NU_NOTA_LC", "NU_NOTA_MT", "NU_NOTA_REDACAO")
@@ -34,8 +34,12 @@ dataset$MEDIA_MT <- rowMeans(
   )]
 )
 
+# Ajusta o modelo linear para prever a nota de Matemática
+m <- lm(NU_NOTA_MT ~ MEDIA_MT, data = dataset)
+
 # Ajusta as margens e mantém o gráfico com proporção quadrada
 par(mar=c(4,4,1,1), pty="s")
+
 # Gráfico de dispersão entre a média sem Matemática e a nota de Matemática
 plot(dataset$MEDIA_MT, dataset$NU_NOTA_MT,
      pch=19, col="blue",
@@ -47,10 +51,13 @@ abline(m, col="orange", lwd=3)
 
 # Seleciona apenas os 15 primeiros participantes para facilitar a visualização
 i <- 1:15
+
 # Ajusta o modelo linear usando os 15 primeiros participantes
 m0 <- lm(NU_NOTA_MT[i] ~ MEDIA_MT[i], data = dataset)
+
 # Configura o espaço do gráfico
 par(mar = c(4,4,1,1), pty = "s")
+
 # X = média sem Matemática
 # Y = nota observada de Matemática
 plot(dataset$MEDIA_MT[i], dataset$NU_NOTA_MT[i],
@@ -66,22 +73,22 @@ segments(dataset$MEDIA_MT[i], dataset$NU_NOTA_MT[i],
          dataset$MEDIA_MT[i], fitted(m0),
          col = "green", lwd = 2)
 
-# Ajusta o modelo linear para prever a nota de Matemática usando a média sem Matemática
-m <- lm(NU_NOTA_MT ~ MEDIA_MT, data = dataset)
-coef (m)
+# Mostra os coeficientes do modelo
+coef(m)
 
 # Gráfico dos valores ajustados contra os resíduos do modelo
-par(mar=c(4,4,1,1),pty="s")
+par(mar=c(4,4,1,1), pty="s")
 plot(fitted(m), resid(m), pch=19, col="blue",
      xlab="ajustado", ylab="residuo")
 
 # Linha de referência para verificar a distribuição dos resíduos em torno de zero
-abline(h=0, col="orange", lwd=3, lty=2)''
+abline(h=0, col="orange", lwd=3, lty=2)
 
-# Teste de Breusch - Pagan
+# Teste de Breusch-Pagan
 # Instala e carrega o pacote usado para testes de regressão
 install.packages("lmtest")
 library(lmtest)
+
 # Aplica o teste de Breusch-Pagan para verificar heterocedasticidade
 bptest(m)
 
@@ -98,14 +105,11 @@ itr <- sample(seq_len(n), size = round(0.7 * n))
 tr <- dataset[itr, ]
 te <- dataset[-itr, ]
 
-# Modelo 1: prevê MEDIA_MT usando somente a nota de Matemática
-m1 <- lm(MEDIA_MT ~ NU_NOTA_MT, data = tr)
-
-# Modelo 2: acrescenta a renda como variável explicativa
-m2 <- lm(MEDIA_MT ~ NU_NOTA_MT + MEDIA, data = tr)
+# Ajusta o modelo usando apenas os dados de treinamento
+m1 <- lm(NU_NOTA_MT ~ MEDIA_MT, data = tr)
 
 # Função para calcular o erro quadrático médio (MSE)
-mse <- function(m,d) mean((d$MEDIA-predict(m,d))^2)
+mse <- function(m,d) mean((d$NU_NOTA_MT-predict(m,d))^2)
 
-# Calcula a raiz do MSE (RMSE) dos dois modelos no conjunto de teste
-sqrt(c(m1 = mse(m1,te), m2 = mse(m2,te)))
+# Calcula a raiz do MSE (RMSE) do modelo no conjunto de teste
+sqrt(c(m1 = mse(m1,te)))
