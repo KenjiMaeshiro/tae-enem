@@ -125,7 +125,7 @@ O terceiro boxplot apresenta a distribuição da média das notas entre as difer
 
 As categorias apresentam distribuições relativamente próximas, mas algumas diferenças podem ser observadas nas medianas.
 
-A categoria `1` apresenta uma das maiores medianas, enquanto as categorias `2`, `3` e `5` apresentam medianas um pouco menores. A categoria `4` possui uma mediana próxima às categorias com valores mais elevados.
+A categoria `1(Branca)` apresenta uma das maiores medianas, enquanto as categorias `2(Preta)`, `3(Parda)` e `5(Indígena)` apresentam medianas um pouco menores. A categoria `4(Amarela)` possui uma mediana próxima às categorias com valores mais elevados.
 
 Também é possível observar uma quantidade significativa de *outliers* em algumas categorias, principalmente nas categorias `1`, `2` e `3`. Esses valores representam participantes cujas médias estão muito afastadas da região central de seus respectivos grupos.
 
