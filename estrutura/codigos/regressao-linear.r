@@ -102,7 +102,7 @@ te <- dataset[-itr, ]
 m1 <- lm(MEDIA_MT ~ NU_NOTA_MT, data = tr)
 
 # Modelo 2: acrescenta a renda como variável explicativa
-m2 <- lm(MEDIA_MT ~ NU_NOTA_MT + RENDA, data = tr)
+m2 <- lm(MEDIA_MT ~ NU_NOTA_MT + MEDIA, data = tr)
 
 # Função para calcular o erro quadrático médio (MSE)
 mse <- function(m,d) mean((d$MEDIA-predict(m,d))^2)
