@@ -37,6 +37,13 @@ dataset$MEDIA_MT <- rowMeans(
 # TRUE representa resposta "B" e FALSE representa as demais respostas.
 dataset$Q020 <- dataset$Q020 == "B"
 
+# Mantém somente as categorias de cor/raça de 1 a 5  
+dataset <- subset(dataset, TP_COR_RACA %in% 1:5)  
+  
+# Transforma a variável em binária:  
+# categoria 1 = FALSE; categorias 2 a 5 = TRUE  
+dataset$RACA <- ifelse(dataset$TP_COR_RACA == 1, FALSE, TRUE)  
+
 # Calcula o desvio padrão das médias dos participantes
 desvio <- sd(dataset$MEDIA)
 
@@ -107,5 +114,13 @@ boxplot(
   data = dataset,
   main = "Distribuição da Média por Acesso a computador/notebook",
   xlab = "Acesso ao notebook",
+  ylab = "Média das Notas"
+)
+
+boxplot(
+  MEDIA ~ TP_COR_RACA,
+  data = dataset,
+  main = "Distribuição da Média por Raça/cor",
+  xlab = "Raça/cor",
   ylab = "Média das Notas"
 )
