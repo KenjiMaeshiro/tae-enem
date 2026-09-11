@@ -84,13 +84,6 @@ for (limiar in limiares){
     print(paste("Limiar:", limiar))  
     print(table(real = dataset$RACA[!is.na(dataset$MEDIA)], previsto = yhat))  
 }  
-  
-# Teste AUC da classificação de modelo  
-mean(outer(  
-  p[dataset$RACA[!is.na(dataset$MEDIA)] == TRUE],  
-  p[dataset$RACA[!is.na(dataset$MEDIA)] == FALSE],  
-  ">"  
-))
 
 # 1) Divide os dados em 70% para treinamento e 30% para teste 
 set.seed(1)  
