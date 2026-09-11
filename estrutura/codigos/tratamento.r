@@ -28,9 +28,6 @@ dataset[colunas_int] <- lapply(
   function(x) as.numeric(gsub(",", ".", x))
 )
 
-# Remove as linhas que possuem pelo menos um valor ausente
-dataset <- na.omit(dataset)
-
 # Remove espaços extras das respostas de Q020
 dataset$Q020 <- trimws(dataset$Q020)
 
@@ -60,3 +57,6 @@ table(dataset$Q020)
 
 # Verifica se RACA ficou corretamente codificada
 table(dataset$RACA)
+
+# Remove as linhas que possuem pelo menos um valor ausente
+dataset <- na.omit(dataset)
