@@ -33,10 +33,10 @@ dataset$Q020 <- dataset$Q020 == "B"
 # A = 0 (Não possui notebook) e as demais respostas = 1 (Possui notebook)
 dataset$NOTE <- ifelse(dataset$Q021 == "A", 0, 1)
 
-# Mantém somente as categorias de cor/raça de 1 a 5
-dataset_raca <- subset(dataset, TP_COR_RACA %in% 1:5)
-
-# Transforma a variável em binária:
-# categoria 1 = FALSE; categorias 2 a 5 = TRUE
-dataset_raca$RACA <- ifelse(dataset_raca$TP_COR_RACA == 1, FALSE, TRUE)
+# Mantém somente as categorias de cor/raça de 1 a 5  
+dataset <- subset(dataset, TP_COR_RACA %in% 1:5)  
+  
+# Transforma a variável em binária:  
+# categoria 1 = FALSE; categorias 2 a 5 = TRUE  
+dataset$RACA <- ifelse(dataset$TP_COR_RACA == 1, FALSE, TRUE)  
 
