@@ -36,6 +36,9 @@ dataset <- subset(dataset, TP_COR_RACA %in% 1:5)
 # Transforma a variável em binária:  
 # categoria 1 = FALSE; categorias 2 a 5 = TRUE  
 dataset$RACA <- ifelse(dataset$TP_COR_RACA == 1, FALSE, TRUE)  
+
+# Remove as linhas que possuem pelo menos um valor ausente
+dataset <- na.omit(dataset)
   
 # Configura o gráfico  
 par(mar = c(4, 4, 1, 1), pty = "s")  
