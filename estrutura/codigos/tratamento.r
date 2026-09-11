@@ -13,14 +13,6 @@ dataset[colunas_char] <- lapply(
   as.character
 )
 
-# Seleciona as cinco notas do ENEM que serão utilizadas nos cálculos
-colunas_int <- c(
-  "NU_NOTA_CN",
-  "NU_NOTA_CH",
-  "NU_NOTA_LC",
-  "NU_NOTA_MT",
-  "NU_NOTA_REDACAO"
-)
 
 # Troca vírgula por ponto e converte as notas para valores numéricos
 dataset[colunas_int] <- lapply(
