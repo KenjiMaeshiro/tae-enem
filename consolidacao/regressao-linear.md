@@ -62,9 +62,7 @@ Foi ajustado o modelo:
 
 Nesse modelo, `NU_NOTA_MT` é a variável resposta e `MEDIA_MT` é a variável explicativa.
 
-**[INSERIR IMAGEM — gráfico de dispersão + reta de regressão]**
-
-`![Gráfico de dispersão entre a média sem Matemática e a nota de Matemática](imagens/regressao_media_mt.jpg)`
+`![Gráfico de dispersão entre a média sem Matemática e a nota de Matemática](imagens/regressao_media_mt.png)`
 
 O modelo apresentou os seguintes coeficientes:
 
@@ -89,9 +87,7 @@ Portanto, os resultados indicam uma associação positiva e aproximadamente line
 
 Também foi realizada uma análise dos resíduos do modelo, comparando os valores ajustados pela regressão com os resíduos.
 
-**[INSERIR IMAGEM — gráfico de valores ajustados x resíduos]**
-
-`![Gráfico de resíduos](imagens/residuos_regressao.jpg)`
+`![Gráfico de resíduos](imagens/residuos_regressao.png)`
 
 Os resíduos representam a diferença entre a nota observada e a nota estimada pelo modelo.
 
@@ -105,9 +101,8 @@ Para facilitar a visualização do funcionamento da regressão, foram selecionad
 
 Foi ajustado um modelo específico para essa pequena amostra e adicionadas linhas verticais representando a distância entre a nota observada e a nota estimada pela regressão.
 
-**[INSERIR IMAGEM — gráfico dos 15 primeiros participantes com resíduos]**
 
-`![Visualização dos resíduos dos 15 primeiros participantes](imagens/residuos_15.jpg)`
+`![Visualização dos resíduos dos 15 primeiros participantes](imagens/residuos_15.pngg)`
 
 Essa representação permite visualizar diretamente os erros de previsão do modelo. Quanto maior a distância entre o ponto observado e a reta de regressão, maior é o resíduo daquele participante.
 
