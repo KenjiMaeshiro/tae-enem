@@ -135,7 +135,8 @@ Limiar ideal (Youden): 0,3714
 Sensibilidade: 0,6123
 Especificidade: 0,4956
 ```
-![Gráfico de curva ROC](../imagens/regressao-logistica.png)
+
+![Curva ROC - RACA ~ MEDIA](../imagens/curva.png)
 
 A curva (laranja) fica próxima da diagonal (acaso), afastando-se pouco dela — consistente com a AUC de 0,5674 obtida.
 
