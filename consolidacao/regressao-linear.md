@@ -102,7 +102,7 @@ Para facilitar a visualização do funcionamento da regressão, foram selecionad
 Foi ajustado um modelo específico para essa pequena amostra e adicionadas linhas verticais representando a distância entre a nota observada e a nota estimada pela regressão.
 
 
-`![Visualização dos resíduos dos 15 primeiros participantes](imagens/residuos_15.pngg)`
+`![Visualização dos resíduos dos 15 primeiros participantes](imagens/residuos_15.png)`
 
 Essa representação permite visualizar diretamente os erros de previsão do modelo. Quanto maior a distância entre o ponto observado e a reta de regressão, maior é o resíduo daquele participante.
 
