@@ -77,7 +77,7 @@ O gráfico mostra os pontos observados (azul), uma reta linear de referência (v
 
 > 📌 **[ESPAÇO RESERVADO PARA A IMAGEM DO GRÁFICO DE REGRESSÃO LOGÍSTICA]**
 >
-> ![Gráfico de regressão logística RACA x MEDIA](imagem_regressao_logistica.png)
+> ![Gráfico de regressão logística RACA x MEDIA](../imagens-regressao-logistica.png)
 
 ---
 
@@ -138,7 +138,7 @@ Sensibilidade: 0,6123
 Especificidade: 0,4956
 ```
 
-![Curva ROC - RACA ~ MEDIA](imagem_curva_roc.png)
+![Curva ROC - RACA ~ MEDIA](../imagens-curva-roc.png)
 
 A curva (laranja) fica próxima da diagonal (acaso), afastando-se pouco dela — consistente com a AUC de 0,5674 obtida.
 
