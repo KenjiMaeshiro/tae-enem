@@ -62,7 +62,7 @@ Foi ajustado o modelo:
 
 Nesse modelo, `NU_NOTA_MT` é a variável resposta e `MEDIA_MT` é a variável explicativa.
 
-`![Gráfico de dispersão entre a média sem Matemática e a nota de Matemática](imagens/regressao_media_mt)`
+`![Gráfico de dispersão entre a média sem Matemática e a nota de Matemática](imagens./regressao_media_mt)`
 
 O modelo apresentou os seguintes coeficientes:
 
