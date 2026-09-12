@@ -81,7 +81,7 @@ O coeficiente de `MEDIA_MT` foi **0,9803**, indicando uma relação positiva ent
 
 Em termos práticos, para cada aumento de **1 ponto na média das demais áreas**, o modelo estima um aumento de aproximadamente **0,98 ponto na nota de Matemática**, em média.
 
-Portanto, os resultados indicam uma associação positiva e aproximadamente linear entre o desempenho nas quatro áreas consideradas em `MEDIA_MT` e o desempenho em Matemática.
+Portanto, os resultados indicam uma associação positiva e aproximadamente li near entre o desempenho nas quatro áreas consideradas em `MEDIA_MT` e o desempenho em Matemática.
 
 ## 5. Visualização dos resíduos
 
