@@ -136,7 +136,7 @@ Sensibilidade: 0,6123
 Especificidade: 0,4956
 ```
 
-![Curva ROC - RACA ~ MEDIA](../imagens-curva-roc.png)
+[Curva ROC - RACA ~ MEDIA](../imagens/curva-roc.png)
 
 A curva (laranja) fica próxima da diagonal (acaso), afastando-se pouco dela — consistente com a AUC de 0,5674 obtida.
 
