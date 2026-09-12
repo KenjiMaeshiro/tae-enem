@@ -107,9 +107,10 @@ te <- dataset[-itr, ]
 
 # Ajusta o modelo usando apenas os dados de treinamento
 m1 <- lm(NU_NOTA_MT ~ MEDIA_MT, data = tr)
+m2 <- lm(NU_NOTA_MT ~ MEDIA_MT + MEDIA, data = tr)
 
 # Função para calcular o erro quadrático médio (MSE)
 mse <- function(m,d) mean((d$NU_NOTA_MT-predict(m,d))^2)
 
-# Calcula a raiz do MSE (RMSE) do modelo no conjunto de teste
-sqrt(c(m1 = mse(m1,te)))
+# Calcula a raiz do MSE (RMSE) dos modelo no conjunto de teste
+sqrt(c(m1 =mse(m1,te), m2=mse(m2,te)))
