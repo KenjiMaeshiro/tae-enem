@@ -87,7 +87,7 @@ Portanto, os resultados indicam uma associação positiva e aproximadamente li n
 
 Também foi realizada uma análise dos resíduos do modelo, comparando os valores ajustados pela regressão com os resíduos.
 
-![Gráfico de resíduos](imagens/residuos_regressao.png)
+![Gráfico de resíduos](tae-enem/imagens/residuos_regressao.png)
 
 Os resíduos representam a diferença entre a nota observada e a nota estimada pelo modelo.
 
