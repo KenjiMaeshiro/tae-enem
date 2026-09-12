@@ -75,9 +75,7 @@ A cada ponto a mais na média, as chances de ser não branco caem ~0,26%. O efei
 
 O gráfico mostra os pontos observados (azul), uma reta linear de referência (verde tracejada) e a curva sigmoide de probabilidades previstas pelo modelo logístico (laranja).
 
-> 📌 **[ESPAÇO RESERVADO PARA A IMAGEM DO GRÁFICO DE REGRESSÃO LOGÍSTICA]**
->
-> ![Gráfico de regressão logística RACA x MEDIA](../imagens-regressao-logistica.png)
+![Gráfico de regressão logística RACA x MEDIA](../imagens/regressao-logistica.png)
 
 ---
 
