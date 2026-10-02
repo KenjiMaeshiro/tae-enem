@@ -85,6 +85,14 @@ for (limiar in limiares){
     print(table(real = dataset$RACA[!is.na(dataset$MEDIA)], previsto = yhat))  
 }  
 
+# Teste de curva AUC
+install.packages("pROC")
+library(pROC)
+roc_m <- roc(dataset$RACA, p)
+auc(roc_m)
+plot(roc_m, col = "orange", lwd = 2, main = "Curva ROC - RACA ~ MEDIA")
+limiar_ideal <- coords(roc_m, "best", best.method = "youden")
+
 # 1) Divide os dados em 70% para treinamento e 30% para teste 
 set.seed(1)  
 itr <- sample(nrow(dataset), round(0.7 * nrow(dataset)))  
