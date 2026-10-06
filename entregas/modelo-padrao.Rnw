@@ -1,0 +1,322 @@
+
+%==========================================================
+% ENTREGA 1 — A pergunta do trabalho
+% Teoria do Aprendizado Estatístico — Ciências de Dados
+% Fatec Baixada Santista – Rubens Lara
+% Derivado de modelo-trabalho.Rnw (R + knitr + abnTeX2)
+% ==========================================================
+%
+% O QUE ENTREGAR
+%   Um texto de NO MÁXIMO 3 PÁGINAS, com quatro seções:
+%     1. Introdução ................... o contexto e o objetivo
+%     2. O banco de dados e o problema  a escolha e a motivação dela
+%     3. A pergunta ................... a pergunta e a ficha de 7 campos
+%     4. Defesa da pergunta ........... a evidência de que ela se sustenta
+%   Mais as Referências (não contam nas 3 páginas).
+%
+% ONDE ENTREGAR
+%   O PDF e este .Rnw em  consolidados/
+%   O código que gerou os números em  estrutura/codigo/
+%
+% COMO COMPILAR
+%   RStudio: Tools > Global Options > Sweave >
+%            "Weave Rnw files using: knitr" e "Typeset LaTeX into PDF using: pdfLaTeX".
+%            Depois, botão "Compile PDF".
+%   Terminal: Rscript -e "knitr::knit2pdf('entrega-1-pergunta.Rnw')"
+%
+% ARQUIVOS NECESSÁRIOS NA MESMA PASTA
+%   entrega-1-pergunta.Rnw   (este arquivo)
+%   referencias.bib          (as referências em BibTeX)
+%
+% REQUISITOS
+%   R com knitr; LaTeX com abntex2 (TeX Live: texlive-publishers).
+%   Salve em UTF-8. Se acentos saírem como <U+00E9>, a sessão do R não
+%   está em locale UTF-8 (Linux: LANG=pt_BR.UTF-8 ou C.UTF-8).
+% ==========================================================
+
+\documentclass[
+  article,
+  12pt,
+  oneside,
+  a4paper,
+  english,
+  brazil
+]{abntex2}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{icomma}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[alf]{abntex2cite}
+
+\hypersetup{hidelinks}
+
+% ----------------------------------------------------------
+% DADOS DA ENTREGA — preencha aqui
+% ----------------------------------------------------------
+\titulo{ \textit{Como a situação socioecônomica dos participantes está relacionada ao desempenho obtido nas provas de ENEM?}}
+% O abntex2 imprime um "titulo estrangeiro" logo abaixo do titulo quando o
+% documento declara mais de um idioma. Deixe vazio se nao houver.
+\tituloestrangeiro{}
+\autor{Grupo - Enem}
+\local{Santos-SP}
+\data{\today}
+
+\newcommand{\nomecurso}{Tecnologia em Ciência de Dados}
+\newcommand{\nomedisciplina}{Teoria do Aprendizado Estatístico}
+\newcommand{\nomeprofessor}{Prof.\ Dr.\ João Paulo Ferreira de Mello}
+\newcommand{\repositorio}{TAE-ENEM}
+% Um integrante por linha: Nome Completo -- RA
+\newcommand{\integrantes}{%
+  Ana Luiza Bispo Aguiar  -- RA 0051352511020 \\
+  Caio Kenji de Paula Maeshiro -- RA 0051352511008 \\
+  Lucas Murinelly Feliciano -- RA 0051352511013 \\
+  Pedro Santos Malaquias Rodrigues -- RA 00513525110041%
+}
+
+\begin{document}
+
+<<setup, include=FALSE>>=
+library(knitr)
+opts_chunk$set(
+  echo       = FALSE,   # o codigo NAO aparece: ele mora em estrutura/codigo/
+  message    = FALSE,
+  warning    = FALSE,
+  fig.align  = "center",
+  out.width  = "0.52\\linewidth",
+  fig.width  = 4,
+  fig.height = 4
+)
+options(OutDec = ",", digits = 4)
+@
+
+<<dados, include=FALSE>>=
+# ============================================================================================================================================
+dados    <- read.csv("dados-enem-2021-2025.csv")
+resposta <- "RACA"
+# =========================================================================
+
+# REGRA: nada de acento dentro de string de R -- o acento quebra quando a
+# sessao do R nao esta em locale UTF-8. Onde precisar, escreva o acento em
+# LaTeX ("m\\'edia", "regress\\~ao"): o \Sexpr repassa intacto.
+tex <- function(x) gsub("_", "\\\\_", x)   # protege o sublinhado dos nomes
+
+y            <- dados[[resposta]]
+quantitativa <- is.numeric(y)
+n            <- nrow(dados)
+p            <- ncol(dados) - 1
+resposta_tex <- tex(resposta)
+
+# --- linha de base: o desempenho do palpite mais burro possivel ----------
+if (quantitativa) {
+  valor_base       <- sd(y, na.rm = TRUE)
+  texto_base       <- paste0("RMSE = ", format(round(valor_base, 2), nsmall = 2))
+  nome_base        <- "chutar sempre a m\\'edia"
+  palavra_tipo     <- "regress\\~ao"
+  palavra_resposta <- "quantitativa"
+  palavra_metrica  <- "RMSE, na unidade de $Y$"
+} else {
+  valor_base       <- max(table(y)) / sum(table(y))
+  texto_base       <- paste0("acur\\'acia = ", format(round(valor_base, 3), nsmall = 3))
+  nome_base        <- "chutar a classe mais comum"
+  palavra_tipo     <- "classifica\\c{c}\\~ao"
+  palavra_resposta <- "qualitativa"
+  palavra_metrica  <- "acur\\'acia ou AUC"
+}
+
+# --- suspeita de vazamento: quem mais se parece com a resposta -----------
+num <- dados[sapply(dados, is.numeric)]
+if (quantitativa && ncol(num) > 1) {
+  cc <- abs(cor(num, use = "complete.obs")[, resposta])
+  cc <- sort(cc[names(cc) != resposta], decreasing = TRUE)
+  texto_cor <- paste0("\\texttt{", tex(names(cc)[1]), "}: ",
+                      format(round(cc[1], 3), nsmall = 3))
+} else {
+  texto_cor <- "n\\~ao se aplica (resposta qualitativa)"
+}
+
+# --- balanco das classes e valores faltantes -----------------------------
+if (quantitativa) {
+  texto_balanco <- "n\\~ao se aplica (resposta quantitativa)"
+} else {
+  texto_balanco <- paste(
+    paste0(
+      "\\texttt{",
+      tex(names(table(y))),
+      "}: ",
+      as.integer(table(y))
+    ),
+    collapse = " | "
+  )
+}
+
+faltantes <- colSums(is.na(dados))
+
+texto_falta <- if (sum(faltantes) == 0) {
+  "nenhum"
+} else {
+  paste(
+    paste0(
+      "\\texttt{",
+      tex(names(faltantes)[faltantes > 0]),
+      "}: ",
+      faltantes[faltantes > 0]
+    ),
+    collapse = " | "
+  )
+}
+@
+
+\selectlanguage{brazil}
+\frenchspacing
+
+% ----------------------------------------------------------
+% IDENTIFICAÇÃO
+% ----------------------------------------------------------
+\maketitle
+
+\begin{center}
+  \small
+  Fatec Baixada Santista -- Rubens Lara \\
+  \nomecurso{} \quad|\quad \nomedisciplina{} \quad|\quad \nomeprofessor{} \\[0.4em]
+  \integrantes \\[0.4em]
+  Repositório: \texttt{\repositorio}
+\end{center}
+
+\textual
+
+% ==========================================================================
+\section{Introdução}
+% ==========================================================================
+% ~meia página. O QUE VAI AQUI:
+%   - de que assunto trata o trabalho (o domínio, em linguagem comum);
+%   - por que esse assunto importa, e para quem;
+%   - o que este texto entrega: a pergunta que o grupo vai perseguir
+%     no resto do semestre, e a evidência de que ela se sustenta.
+% NÃO adiante aqui os números da Seção 4.
+
+O Exame Nacional do Ensino Médio (ENEM) é uma avaliação educacional importante no Brasil e seus resultados são utilizados em diferentes processos para facilitar o acesso dos estudantes ao ensino superior. O desempenho dos participantes pode estar relacionado a diversos fatores, entre eles as condições socioeconômicas, familiares e educacionais. O objetivo desta pesquisa está relacionado as possíveis desigualdades de condições entre os participantes.
+
+Fatores como renda familiar, escolaridade dos responsáveis e acesso á internet podem impactar em condições diferentes de preparação para o exame. Dessa forma, é importante analisar os dados para verificar se essas características apresentam alguma relação com as notas dos participantes.
+
+A pesquisa busca responder á seguinte pergunta: como a situação socioecônomica dos participantes está relacionada ao desempenho obtido nas provas de ENEM? O objetivo geral é analisar a relação entre as características socioecônimicas dos participantes e seu desempenho no exame, utilizando dados públicos para identificar os possíveis padrões e as diferenças nos resultados.
+
+O artigo será organizado em seções que apresentam inicialmente os procedimentos utilizados na coleta e análise dos dados. Por fim, serão apresentados os resultados e a defesa da pergunta.
+
+% ==========================================================================
+\section{O banco de dados e o problema}
+% ==========================================================================
+% ~três quartos de página. O QUE VAI AQUI:
+%   - ORIGEM: de onde veio o banco (órgão, portal, empresa, coleta própria),
+%     com a referência bibliográfica e a data de acesso;
+%   - CONTEÚDO: o que é uma LINHA (uma pessoa? um mês? uma transação?),
+%     quantas linhas, quantas colunas, quais são as principais;
+%   - MOTIVAÇÃO: por que este banco, e não outro. Responda honestamente:
+%     foi interesse pelo assunto? disponibilidade? experiência prévia
+%     do grupo? Todas são razões legítimas -- o que não vale é não ter
+%     razão nenhuma;
+%   - O PROBLEMA: que decisão, no mundo real, depende desse assunto.
+
+O banco de dados utilizado foi construído a partir dos microdados do ENEM, disponibilizados pelo INEP, com informações das edições de 2021 a 2025 \cite{inep_enem}.
+
+Cada linha do banco representa um participante do ENEM. Para medir o desempenho, foi criada a variável \texttt{MEDIA}, calculada a partir da média das cinco notas das provas: Ciências da Natureza, Ciências Humanas, Linguagens, Matemática e Redação.
+
+Também foram escolhidas duas informações socioeconômicas: renda familiar (\texttt{Q007}) e a raça dos alunos (\texttt{TPCORRACA}).
+
+O objetivo do trabalho é analisar se essas condições socioeconômicas estão relacionadas ao desempenho dos participantes no ENEM.
+
+% ==========================================================================
+\section{A pergunta}
+% ==========================================================================
+% ~três quartos de página. O QUE VAI AQUI:
+%   - a pergunta em UMA FRASE, sem jargão -- alguém de fora da área
+%     precisa entendê-la;
+%   - a ficha de sete campos preenchida (Tabela 1);
+%   - um parágrafo justificando o TIPO: por que regressão e não
+%     classificação (ou o contrário), e por que predição e não inferência.
+
+A pergunta deste trabalho é: \textbf{Como a situação socioecônomica dos participantes
+está relacionada ao desempenho obtido nas provas de ENEM?}
+
+\begin{table}[htb]
+\centering
+\caption{Ficha da pergunta}\label{tab:ficha}\small
+\begin{tabular}{@{}p{0.28\textwidth}p{0.64\textwidth}@{}}
+\toprule
+\textbf{Campo} & \textbf{Preenchimento}\\
+\midrule
+1. Pergunta & Relação entre situação socioeconômica e média das notas do ENEM.\\
+2. Resposta $Y$ & \texttt{MEDIA}, quantitativa contínua, de 0 a 1000 pontos; média das cinco notas.\\
+3. Preditores $X$ & \texttt{TP\_COR\_RACA} se tornou uma variável categórica nominal chamada \texttt{RACA}.\\
+4. Tipo & Aprendizado supervisionado; regressão; foco inicial em predição, com interpretação descritiva das associações.\\
+5. Métrica & RMSE, em pontos da escala de $Y$.\\
+6. Linha de base & Prever sempre a média de $Y$: RMSE $\approx$ 88.93 pontos.\\
+7. Dono do problema & Equipes de gestão e planejamento educacional, interessadas em identificar padrões associados ao desempenho e apoiar estudos sobre desigualdades educacionais.\\
+\bottomrule
+\end{tabular}
+\fonte{Elaborada pelos autores.}
+\end{table}
+
+Escolhemos a regressão porque queremos prever uma nota, que é uma variável quantitativa. O objetivo é usar as informações socioeconômicas para prever a média do ENEM.
+
+% ==========================================================================
+\section{Defesa da pergunta}
+% ==========================================================================
+% ~uma página. É A SEÇÃO QUE PESA MAIS. O QUE VAI AQUI:
+%   - o diagnóstico do banco (Tabela 2), comentado item a item;
+%   - a passagem pelos quatro descartes: vazamento, n contra p, balanço
+%     de classes, faltantes -- dizendo o que foi encontrado e o que o
+%     grupo fez a respeito;
+%   - a figura da resposta (Figura 1), com uma frase de leitura;
+%   - o veredito: a pergunta se sustenta? Se um descarte pegou, o que
+%     mudou na pergunta por causa dele?
+% Os números desta seção saem do bloco <<dados>> -- eles se atualizam
+% sozinhos quando voces trocarem o banco.
+
+A pergunta do trabalho é importante por ser embasada em frequentes discussões sobre a forma que a raça das pessoas impacta no seu desempenho escolar, de acordo com o IBGE  \cite{ibge} no Sistema de Indicadores Sociais, a raça impacta até mesmo na taxa de frequência escolar dos alunos, que anualmente pessoas de cor parda ou negra apresentam taxas cada vez menores. Portanto, a compreensão do quanto que outros problemas além de estudo e conhecimento podem influenciar a nota dos alunos em uma das etapas essenciais na vida acadêmica, o ENEM. 
+
+A Tabela~\ref{tab:diag} apresenta os dados utilizados para a resposta da pergunta.
+
+\begin{table}[htb]
+  \centering
+  \caption{Diagnóstico do banco}
+  \label{tab:diag}
+  \small
+  \begin{tabular}{@{}p{0.32\textwidth}p{0.60\textwidth}@{}}
+    \toprule
+    \textbf{Verificação} & \textbf{Resultado} \\
+    \midrule
+    Tamanho ($n \times p$)   & $\Sexpr{n} \times \Sexpr{p}$ \\
+    Linha de base            & \Sexpr{texto_base} \quad (\Sexpr{nome_base}) \\
+    Maior correlação com $Y$ & \Sexpr{texto_cor} \\
+    Balanço das classes      & \Sexpr{texto_balanco} \\
+    Valores faltantes        & \Sexpr{texto_falta} \\
+    \bottomrule
+  \end{tabular}
+  \fonte{Elaborada pelos autores.}
+\end{table}
+
+\textbf{Vazamento.} Como \texttt{RACA} é uma variável qualitativa, a correlação não foi utilizada para avaliar vazamento. Verificou-se se o preditor \texttt{MEDIA} separava as classes de forma quase perfeita, o que não ocorreu. As medianas foram 557,4 para \texttt{RACA} = FALSE e 533,3 para \texttt{RACA} = TRUE, com ampla sobreposição entre os intervalos observados. A AUC de 0,567 confirmou a baixa capacidade de discriminação. Portanto, não há evidência de vazamento de informação, e nenhuma variável precisou ser removida por esse motivo.
+
+\textbf{Tamanho.} São $\Sexpr{n}$ observações para $\Sexpr{p}$ preditores.
+Comente se há observações suficientes por coluna, e o que isso implica para a
+escolha do modelo.
+
+\textbf{Balanço e faltantes.} Durante a etapa de processamento do banco de dados os valores faltantes ou ausentes foram removidos, buscando não ter um desbalanceamento entre os valores analisados que prejudicariam a análise.
+
+
+\textbf{Veredito.} A pergunta se sustenta provisoriamente, pois as verificações realizadas não identificaram problemas que inviabilizem a análise ou indiquem vazamento de informação. Assim, ela pode ser mantida nesta etapa. Com a aplicação dos métodos de aprendizado supervisionado, será possível avaliar melhor a capacidade preditiva das variáveis socioeconômicas e decidir se serão necessários ajustes na pergunta ou nos preditores.
+
+% ----------------------------------------------------------
+% REFERÊNCIAS — não contam nas 3 páginas.
+% Só aparecem as obras citadas. Para incluir uma obra não citada,
+% use \nocite{chave}.
+% ----------------------------------------------------------
+\postextual
+\bibliography{referencias.bib}
+      
+\end{document}
+```
