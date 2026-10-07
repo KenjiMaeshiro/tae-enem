@@ -278,7 +278,7 @@ Escolhemos a regressão porque queremos prever uma nota, que é uma variável qu
 
 A pergunta do trabalho é importante por ser embasada em frequentes discussões sobre a forma que a raça das pessoas impacta no seu desempenho escolar, de acordo com o IBGE  \cite{ibge} no Sistema de Indicadores Sociais, a raça impacta até mesmo na taxa de frequência escolar dos alunos, que anualmente pessoas de cor parda ou negra apresentam taxas cada vez menores. Portanto, a compreensão do quanto que outros problemas além de estudo e conhecimento podem influenciar a nota dos alunos em uma das etapas essenciais na vida acadêmica, o ENEM. 
 
-A Tabela~\ref{tab:diag} apresenta os dados utilizados para a resposta da pergunta.
+A Tabela~\ref{tab:diag} apresenta os dados utilizados para a resposta da pergunta. Na compreensão da tabela, true são os estudantes com raças apontadas como socialmente mais afetadas e false apenas a raça branca.
 
 \begin{table}[htb]
   \centering
@@ -301,9 +301,7 @@ A Tabela~\ref{tab:diag} apresenta os dados utilizados para a resposta da pergunt
 
 \textbf{Vazamento.} Como \texttt{RACA} é uma variável qualitativa, a correlação não foi utilizada para avaliar vazamento. Verificou-se se o preditor \texttt{MEDIA} separava as classes de forma quase perfeita, o que não ocorreu. As medianas foram 557,4 para \texttt{RACA} = FALSE e 533,3 para \texttt{RACA} = TRUE, com ampla sobreposição entre os intervalos observados. A AUC de 0,567 confirmou a baixa capacidade de discriminação. Portanto, não há evidência de vazamento de informação, e nenhuma variável precisou ser removida por esse motivo.
 
-\textbf{Tamanho.} São $\Sexpr{n}$ observações para $\Sexpr{p}$ preditores.
-Comente se há observações suficientes por coluna, e o que isso implica para a
-escolha do modelo.
+\textbf{Tamanho.} São $\Sexpr{n}$ observações para $\Sexpr{p}$ preditores. Dentre todas as preditoras, as escolhidas apontam dados suficientes para serem usados na predição com a variável target.
 
 \textbf{Balanço e faltantes.} Durante a etapa de processamento do banco de dados os valores faltantes ou ausentes foram removidos, buscando não ter um desbalanceamento entre os valores analisados que prejudicariam a análise.
 
