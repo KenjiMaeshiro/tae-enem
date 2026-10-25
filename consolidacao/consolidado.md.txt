@@ -1,0 +1,46 @@
+# Consolidado unificado — Teoria do Aprendizado Estatístico — Aula 05b (Poisson) — 2026-10-25
+*guia versão 1 · tutora: Claude · teoria em 2 sessões (24–25/10) + Parte D em grupo (24/10)*
+**Aluno:** Lucas Murinelly Feliciano · **Grupo (Parte D):** ENEM (Exame Nacional do Ensino Médio) · Ana Luiza, Caio Kenji, Lucas Murinelly e Pedro Santos
+
+## 1. O que foi passado
+
+**Teoria (individual) — os 6 módulos foram concluídos**
+- M1 — contagens e a Poisson
+- M2 — o log da média como reta; $e^{\beta}$ como razão de taxas (com ajuda no Checkpoint 2)
+- M3 — `glm(family = poisson)` e `predict(type = "response")`
+- M4 — o *offset*
+- M5 — sobredispersão e quase-Poisson (fechado na sessão 2)
+- M6 — Poisson contra MQO na validação cruzada (sessão 2)
+
+**Parte D (grupo, 24/10) — M7, M8 e M9 no banco do ENEM**
+- M7 — a contagem: participantes com MEDIA acima de $550{,}08$ (média do banco de $35471$ participantes), por renda × raça × ano. São $170$ linhas ($17\times2\times5$), com exposição = `total` do grupo (de $14$ a $852$), usada como *offset*.
+- M8 — o modelo: renda e raça, com `offset(log(total))`; $\hat\phi=4{,}90$, então quase-Poisson. $e^{\hat\beta}$ de `rendaQ` = $1{,}718$ contra a faixa A; de `racaTRUE` = $0{,}887$ (erro padrão $0{,}0373$).
+- M9 — o placar (RMSE, em participantes por grupo): linha de base $77{,}70$, MQO $26{,}09$, Poisson $28{,}53$. Decisão do grupo: Poisson, pela leitura em razões de taxas, aceitando um erro cerca de $9\%$ maior que o do MQO.
+
+**Placar da teoria (base `anuncios`, 5 dobras):** linha de base $3{,}99$, MQO $2{,}39$, Poisson $1{,}76$. Bateu com o guia nos três números.
+
+**Ordem real das coisas:** a Parte D foi feita antes de a teoria terminar, e a sessão do grupo seguiu sem o consolidado da teoria. Esta sessão fecha essa lacuna.
+
+## 2. Como foi o aprendizado — opinião da tutora
+
+**Teoria.** Você lê bem o que um número significa numa tabela, e as taxas por dia dos anúncios saíram rápido e certas. Travou em três pontos, que se repetiram nas duas sessões: tratou $\beta$ como algo que se subtrai, aplicou o log de novo em vez de desfazê-lo com `exp()`, e trocou valores ao substituir na fórmula. No Checkpoint 5, o erro padrão saiu errado ($0{,}225$, depois $0{,}75$) porque o valor de partida mudava a cada tentativa; quando a conta foi montada passo a passo, chegou a $0{,}075$. Na razão $|z|$, dividiu quando era para multiplicar, e acertou ao isolar a estimativa ($0{,}15$). No M6, acertou que o MQO pode prever negativo, mas explicou pelo modelo trocado (o log protege a Poisson, não o MQO); depois fixou o papel do `type = "response"`. Previu a linha de base como "menor" por achar que o modelo ficava confiante, e corrigiu para "maior" depois de um exemplo com erros de $6$ e $4$ visitas. Previu a Poisson como menor e acertou, mas pelo motivo do erro padrão, e a razão certa é a curva multiplicativa. A resposta do Checkpoint 6 veio em duas etapas: primeiro "não pode ser negativo", depois o porquê ($e^{x}>0$).
+
+**Uma confusão no meio do caminho.** Antes de ver o guia, montei um esqueleto genérico com 70/30, e a troca para o código do guia (5 dobras, conjunto todo) pareceu brusca e sem explicação. Você pediu que eu explicasse, e escolheu seguir o guia. Registro aqui porque o 70/30 que você costuma usar *não* é o esquema deste guia.
+
+**Parte D.** As decisões saíram do grupo: o corte na média, a unidade, e o Poisson no M9. O M7 foi o mais difícil (unidade e exposição levaram várias rodadas), e o grupo apontou que eu introduzi termos sem contexto. No M8, o palpite $\hat\phi<1$ não se confirmou, e "mais preciso" trocou o sentido da quase-Poisson até a tela mostrar o erro padrão crescendo.
+
+**Teste final da teoria:** acertou M4, M5 e M6; a revisar M1, M2 e M3.
+- M1: a variância da Poisson é igual à média ($0{,}5$, e não $0{,}0025$); a chance de zero eventos é $e^{-\lambda}\approx0{,}607$, que ficou sem resposta.
+- M2: $e^{\beta}$ multiplica; com $\beta=-0{,}1$ por ano, $10$ anos a mais multiplicam por $e^{-1}\approx0{,}368$ (queda de $63\%$).
+- M3: $2{,}3$ na escala do log vira $e^{2{,}3}\approx9{,}97$, umas $10$ visitas (a resposta foi $5$).
+
+**Teste da Parte D:** acertou M7 e M9; a revisar M8 ($e^{\beta}=0{,}8$ é a taxa $0{,}8$ vez a do grupo de comparação, ou seja, $20\%$ menor).
+
+## 3. Observações para a frente
+
+- **Revisar antes do trabalho:** o mesmo erro aparece na teoria (M2 e M3) e na Parte D (M8): $e^{\beta}$ multiplica, não subtrai, e `exp()` desfaz o log. Vale refazer M1 ($e^{-\lambda}$ e variância igual à média). No R, o decimal é ponto.
+- **Para a próxima tutora:** responde por tentativa; ver a conta ou a linha exata do R antes de corrigir; vai bem com exemplos numéricos curtos e com a fórmula montada passo a passo; pede explicação mais curta e com menos termos. Quando há mudança de plano (como o 70/30 para o código do guia), explicar o motivo *antes* de trocar.
+- **Para o trabalho:** a contagem da Parte D pode virar uma pergunta auxiliar. Sugestão: *"Como a renda e a raça dos participantes se relacionam com a taxa de participantes acima da média do banco ($550{,}08$) no ENEM?"* A resposta é a contagem acima do corte por renda × raça × ano ($170$ linhas), com exposição = total do grupo; modelo quase-Poisson; métrica RMSE em participantes por grupo, com linha de base $77{,}70$ (escala diferente da linha de base de $88{,}93$ pontos da Entrega 1). É uma associação, não uma causa. A ficha da Entrega 1 só muda depois de conversar com o professor.
+- **Para conversar com o professor:** na base do ENEM, o MQO ($26{,}09$) teve RMSE menor que a Poisson ($28{,}53$), o contrário do que ocorreu em `anuncios`. A escolha da Poisson foi justificada pela leitura em razões de taxas, e vale confirmar se isso é aceito como critério.
+- **Perguntas guardadas:** (1) o ano explica o $\hat\phi=4{,}90$? Só se testa pondo o ano como preditor. (2) O que a Q007 mede no dicionário de variáveis de cada edição? Confirmar antes de escrever. (3) O `na.omit` removeu $16678$ linhas, cerca de um terço do banco antes da limpeza: isso muda a amostra? Conversar com o professor.
+- **Produzido:** previsões $6{,}27$ (1 km, 12 fotos), $1{,}40$ (3 km, 5 fotos) e $3{,}85$ (*offset*, 20 dias); o placar da validação cruzada ($3{,}99$ / $2{,}39$ / $1{,}76$); o código da Parte D em `estrutura/codigo/aula05b_poisson.R` e o placar do ENEM acima.
